@@ -21,3 +21,4 @@ Hotel-Workflow-Automation = { path = ".", editable = true }
 [tool.pixi.dependencies]
 pydantic = ">=2.8.2,<2.9"
 pywin32 = ">=306,<307"
+beautifulsoup4 = ">=4.12.3,<4.13"

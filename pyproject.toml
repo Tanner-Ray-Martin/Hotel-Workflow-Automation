@@ -17,3 +17,7 @@ platforms = ["win-64"]
 Hotel-Workflow-Automation = { path = ".", editable = true }
 
 [tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+pydantic = ">=2.8.2,<2.9"
+pywin32 = ">=306,<307"

@@ -15,15 +15,15 @@ class ReservationDetails(BaseModel):
     hotel_name: str = Field(..., alias="hotelName")
     hotel_address: str = Field(..., alias="hotelAddress")
     hotel_phone: str = Field(..., alias="hotelPhone")
-    check_in_date: date = Field(..., alias="check-InDate")
-    check_out_date: date = Field(..., alias="check-OutDate")
+    check_in_date: date = Field(..., alias="checkInDate")
+    check_out_date: date = Field(..., alias="checkOutDate")
     primary_employee_number: Optional[str] = Field(..., alias="primaryEmployeeNumber")
     primary_employee_name: str = Field(..., alias="primaryEmployeeName")
     job_number: str = Field(..., alias="jobNumber")
     phase: Optional[str]
     project_manager: str = Field(..., alias="projectManager")
 
-    class Config:
+    class ConfigDict:
         populate_by_name = True
         arbitrary_types_allowed = True
 

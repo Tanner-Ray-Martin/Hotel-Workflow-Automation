@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from models.reservation_models import ReservationDetails
+from app.models.reservation_models import ReservationDetails
 
 BAD_TEXT_IS = ["", "Hotel"]
 BAD_TEXT_CONTAINS = ["Thank You For Choosing", "This Message", " Policy: "]
@@ -66,7 +66,7 @@ def large_row_to_many(columns):
     return new_columns
 
 
-def parse_html_to_model(html):
+def create_html_soup(html):
     row_replacements = [
         (
             "<br>",
@@ -75,33 +75,37 @@ def parse_html_to_model(html):
     ]
     for replacte_this, with_this in row_replacements:
         html = html.replace(replacte_this, with_this)
-    soup = BeautifulSoup(html, "html.parser")
+    return BeautifulSoup(html, "html.parser")
 
-    # Initialize a dictionary to store the scraped data
-    reservation_info = {}
 
-    # Find all rows in the table
+def camel_case(text):
+    return text[0].lower() + text[1:].replace(" ", "").replace("-", "")
+
+
+def iterate_rows(soup):
     rows = soup.find_all("tr")
-
-    # Extract the relevant information from the rows
     for row in rows:
         columns = row.find_all("td")
-        new_columns = [
+        clean_columns = [
             clean_text(column.text)
             for column in columns
             if is_valid_column_text(clean_text(column.text))
         ]
+        fixed_columns = fix_columns_or_none(clean_columns)
+        if fixed_columns:
+            yield fixed_columns
 
-        new_columns = fix_columns_or_none(new_columns)
 
-        # Skip empty rows
-        if not new_columns:
-            continue
+def parse_html_to_model(html):
+    soup = create_html_soup(html)
 
-        for new_columns in large_row_to_many(new_columns):
-            key = new_columns[0]
+    # Initialize a dictionary to store the scraped data
+    reservation_info = {}
+
+    for columns in iterate_rows(soup):
+        for new_columns in large_row_to_many(columns):
+            key = camel_case(new_columns[0])
             value = new_columns[1]
-            key = key.replace(" ", "")
-            key = key[0].lower() + key[1:]
             reservation_info[key] = value
+
     return ReservationDetails(**reservation_info)

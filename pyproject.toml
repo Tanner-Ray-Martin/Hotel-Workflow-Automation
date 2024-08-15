@@ -1,0 +1,19 @@
+[project]
+name = "Hotel-Workflow-Automation"
+version = "0.1.0"
+description = "Add a short description here"
+requires-python = ">= 3.12"
+dependencies = []
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[tool.pixi.pypi-dependencies]
+Hotel-Workflow-Automation = { path = ".", editable = true }
+
+[tool.pixi.tasks]
